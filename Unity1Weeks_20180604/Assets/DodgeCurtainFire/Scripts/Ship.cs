@@ -7,7 +7,10 @@ public class Ship : MonoBehaviour
     bool _playable = true;
 
     [SerializeField]
-    float _speed = 1f;
+    float _speed = 100f;
+
+    [SerializeField]
+    BulletGenerator _bulletGenerator;
 
     Vector3 _up = Vector3.up;
     Vector3 _down = Vector3.down;
@@ -26,15 +29,25 @@ public class Ship : MonoBehaviour
 
     void Control()
     {
-        var up = Input.GetAxisRaw ("Vertical") > 0;
-        var down = Input.GetAxisRaw ("Vertical") < 0;
-        var right = Input.GetAxisRaw ("Horizontal") > 0;
-        var left = Input.GetAxisRaw ("Horizontal") < 0;
+        var up = Input.GetAxisRaw("Vertical") > 0;
+        var down = Input.GetAxisRaw("Vertical") < 0;
+        var right = Input.GetAxisRaw("Horizontal") > 0;
+        var left = Input.GetAxisRaw("Horizontal") < 0;
 
-        if (up) { t.position = t.position + _up * _speed; }
-        if (down) { t.position = t.position + _down * _speed; }
-        if (right) { t.position = t.position + _right * _speed; }
-        if (left) { t.position = t.position + _left * _speed; }
+        var p = t.position;
+        var rate = _speed * Time.deltaTime;
+
+        if (up) { p = p + _up * rate; }
+        if (down) { p = p + _down * rate; }
+        if (right) { p = p + _right * rate; }
+        if (left) { p = p + _left * rate; }
+
+        t.position = p;
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            _bulletGenerator.Generate(t.position, Vector3.right, 5f);
+        }
     }
 
     void Update()
