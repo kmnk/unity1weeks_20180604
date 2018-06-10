@@ -97,10 +97,8 @@ public class Ship : MonoBehaviour
         }
     }
 
-    int _rand;
     void Awake()
     {
-        _rand = Random.Range(0, 2);
         _core.Initialize(_isPlayer);
     }
 
