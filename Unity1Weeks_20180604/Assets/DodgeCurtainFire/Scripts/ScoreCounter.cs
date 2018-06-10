@@ -34,7 +34,7 @@ public class ScoreCounter : MonoBehaviour
 
     void Update()
     {
-        if (Stopped && Input.GetKeyDown(KeyCode.R))
+        if (Stopped && Input.GetKeyDown(KeyCode.L))
         {
             Reset();
         }
