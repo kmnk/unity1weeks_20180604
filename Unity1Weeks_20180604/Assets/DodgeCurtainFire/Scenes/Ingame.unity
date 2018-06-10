@@ -235,9 +235,35 @@ Prefab:
       propertyPath: _speed
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114643631958726576, guid: 8adfe95d6655d4c4ca1d02adbc7cae27,
+        type: 2}
+      propertyPath: _isPlayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1368967508900706, guid: 8adfe95d6655d4c4ca1d02adbc7cae27, type: 2}
+      propertyPath: m_Name
+      value: PlayerShip
+      objectReference: {fileID: 0}
+    - target: {fileID: 114643631958726576, guid: 8adfe95d6655d4c4ca1d02adbc7cae27,
+        type: 2}
+      propertyPath: _targetShip
+      value: 
+      objectReference: {fileID: 1416073676}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8adfe95d6655d4c4ca1d02adbc7cae27, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &875372507 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114643631958726576, guid: 8adfe95d6655d4c4ca1d02adbc7cae27,
+    type: 2}
+  m_PrefabInternal: {fileID: 643944877}
+  m_Script: {fileID: 11500000, guid: 9b2d693cadc344af2ab1b5f660feb3ae, type: 3}
+--- !u!114 &1416073676 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114643631958726576, guid: 8adfe95d6655d4c4ca1d02adbc7cae27,
+    type: 2}
+  m_PrefabInternal: {fileID: 1865886695}
+  m_Script: {fileID: 11500000, guid: 9b2d693cadc344af2ab1b5f660feb3ae, type: 3}
 --- !u!114 &1827087257 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114626112721362926, guid: e7158dd0b171d449394152c91f329530,
@@ -283,22 +309,21 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114643631958726576, guid: 8adfe95d6655d4c4ca1d02adbc7cae27,
+        type: 2}
+      propertyPath: _bulletGenerator
+      value: 
+      objectReference: {fileID: 1827087257}
     - target: {fileID: 1368967508900706, guid: 8adfe95d6655d4c4ca1d02adbc7cae27, type: 2}
       propertyPath: m_Name
       value: EnemyShip
       objectReference: {fileID: 0}
     - target: {fileID: 114643631958726576, guid: 8adfe95d6655d4c4ca1d02adbc7cae27,
         type: 2}
-      propertyPath: _playable
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114643631958726576, guid: 8adfe95d6655d4c4ca1d02adbc7cae27,
-        type: 2}
-      propertyPath: _bulletGenerator
+      propertyPath: _targetShip
       value: 
-      objectReference: {fileID: 1827087257}
-    m_RemovedComponents:
-    - {fileID: 50039822736613132, guid: 8adfe95d6655d4c4ca1d02adbc7cae27, type: 2}
+      objectReference: {fileID: 875372507}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8adfe95d6655d4c4ca1d02adbc7cae27, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &2022302207

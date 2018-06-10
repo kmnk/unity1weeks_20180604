@@ -4,7 +4,10 @@ public class Ship : MonoBehaviour
 {
 
     [SerializeField]
-    bool _playable = true;
+    bool _isPlayer = true;
+
+    [SerializeField]
+    Ship _targetShip;
 
     [SerializeField]
     float _speed = 100f;
@@ -34,6 +37,11 @@ public class Ship : MonoBehaviour
         var right = Input.GetAxisRaw("Horizontal") > 0;
         var left = Input.GetAxisRaw("Horizontal") < 0;
 
+        if (!up && !down && !right && !left)
+        {
+            return;
+        }
+
         var p = t.position;
         var rate = _speed * Time.deltaTime;
 
@@ -42,17 +50,56 @@ public class Ship : MonoBehaviour
         if (right) { p = p + _right * rate; }
         if (left) { p = p + _left * rate; }
 
-        t.position = p;
+        Move(p);
+    }
 
-        if (Input.GetKey(KeyCode.Space))
+    void Move(Vector3 toPosition)
+    {
+        var min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
+        var max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
+
+        toPosition.x = Mathf.Clamp(toPosition.x, min.x, max.x);
+        toPosition.y = Mathf.Clamp(toPosition.y, min.y, max.y);
+
+        t.position = toPosition;
+    }
+
+    int _counter = 0;
+    void Cpu()
+    {
+        _counter++;
+        if (_counter > 100)
         {
-            _bulletGenerator.Generate(t.position, Vector3.right, 5f);
+            if (_counter > 150)
+            {
+                _rand = Random.Range(0, 3);
+                _counter = 0;
+            }
+            else
+            {
+                return;
+            }
         }
+        if (_rand == 0 || _rand == 1)
+        {
+            _bulletGenerator.HomingCircle(t.position, _targetShip.transform.position);
+        }
+        if (_rand == 0 || _rand == 2)
+        {
+            _bulletGenerator.Winder(t.position, _targetShip.transform.position);
+        }
+    }
+
+    int _rand;
+    void Awake()
+    {
+        _rand = Random.Range(0, 2);
     }
 
     void Update()
     {
-        if (_playable) { Control(); }
+        if (_isPlayer) { Control(); }
+        if (!_isPlayer) { Cpu(); }
     }
 
 }

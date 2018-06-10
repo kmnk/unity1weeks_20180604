@@ -3,6 +3,8 @@ using UnityEngine;
 class Bullet : MonoBehaviour
 {
 
+    Color32 _color;
+
     float _speed = 0f;
     Vector3 _direction;
     Vector3 _startPosition;
@@ -27,11 +29,26 @@ class Bullet : MonoBehaviour
         }
     }
 
-    public void Initialize(Vector3 startPosition, Vector3 direction, float speed)
+    SpriteRenderer _sr = null;
+    SpriteRenderer sr
+    {
+        get
+        {
+            if (_sr == null) { _sr = GetComponent<SpriteRenderer>(); }
+            return _sr;
+        }
+    }
+
+    public void Initialize(
+            Vector3 startPosition,
+            Vector3 direction,
+            float speed,
+            Color32 color)
     {
         _startPosition = startPosition;
         _direction = direction;
         _speed = speed;
+        sr.color = color;
     }
 
     void Start()
