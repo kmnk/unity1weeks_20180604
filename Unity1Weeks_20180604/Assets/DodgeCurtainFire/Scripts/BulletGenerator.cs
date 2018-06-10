@@ -1,49 +1,121 @@
+using System.Collections;
 using UnityEngine;
 
 class BulletGenerator : MonoBehaviour
 {
 
     [SerializeField]
-    Bullet origin;
+    Bullet _origin;
 
-    public void Generate(Vector3 startPosition, Vector3 direction, float speed, Color32 color)
+    [SerializeField]
+    Ship _target;
+
+    public IEnumerator Static(
+            Vector3 startPosition,
+            Vector3 direction,
+            float duration,
+            float speed,
+            Color32 color)
     {
-        var obj = GameObject.Instantiate(origin.gameObject);
-        var bullet = obj.GetComponent<Bullet>();
-        bullet.Initialize(startPosition, direction.normalized, speed, color);
+        var time = 0f;
+        for (var i = 0; i < duration / 100; i++)
+        {
+            time += Time.deltaTime;
+            if (time > duration) { break; }
+
+            var obj = GameObject.Instantiate(_origin.gameObject);
+            var bullet = obj.GetComponent<Bullet>();
+            bullet.Initialize(startPosition, direction.normalized, speed, color);
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    public IEnumerator Dynamic(
+            Vector3 startPosition,
+            System.Func<Vector3> direction,
+            float duration,
+            float speed,
+            Color32 color)
+    {
+        var time = 0f;
+        for (var i = 0; i < duration / 200; i++)
+        {
+            time += Time.deltaTime;
+            if (time > duration) { break; }
+
+            var obj = GameObject.Instantiate(_origin.gameObject);
+            var bullet = obj.GetComponent<Bullet>();
+            bullet.Initialize(startPosition, direction().normalized, speed, color);
+
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 
     Color32 _homingBulletColor = new Color32(225, 244, 255, 255);
     public void HomingCircle(
             Vector3 startPosition,
-            Vector3 targetPosition,
-            float speed=3f,
+            float duration=5000f,
+            float speed=2f,
             float offset=0f)
     {
-        var dir = targetPosition - startPosition;
         for (var i = 0; i < 360; i+=6)
         {
-            Generate(
+            var j = i;
+            StartCoroutine(Dynamic(
                     startPosition,
-                    Quaternion.Euler(0, 0, i + offset) * dir,
+                    () => {
+                        var dir = _target.T.position - startPosition;
+                        return Quaternion.Euler(0, 0, j + offset) * dir;
+                    },
+                    duration,
                     speed,
-                    _homingBulletColor);
+                    _homingBulletColor));
         }
     }
 
     Color32 _winderBulletColor = new Color32(255, 225, 255, 255);
     public void Winder(
             Vector3 startPosition,
-            Vector3 targetPosition,
-            float speed=3f,
+            float speed=2f,
+            float duration=5000f,
             float offset=0f)
     {
-        var dir = targetPosition - startPosition;
         for (var i = 0; i < 2; i++)
         {
-            Generate(startPosition, Quaternion.Euler(0, 0, 10 * i + 5) * dir, speed, _winderBulletColor);
-            Generate(startPosition, Quaternion.Euler(0, 0, -10 * i - 5) * dir, speed, _winderBulletColor);
+            var j = i;
+            StartCoroutine(Dynamic(
+                startPosition,
+                () =>
+                {
+                    var dir = _target.T.position - startPosition;
+                    return Quaternion.Euler(0, 0, 10 * j + 5) * dir;
+                },
+                duration,
+                speed,
+                _winderBulletColor));
+            StartCoroutine(Dynamic(
+                startPosition,
+                () =>
+                {
+                    var dir = _target.T.position - startPosition;
+                    return Quaternion.Euler(0, 0, -10 * j - 5) * dir;
+                },
+                duration,
+                speed,
+                _winderBulletColor));
         }
+    }
+
+    Color32 _basicBulletColor = new Color32(0, 0, 0, 230);
+    public void Basic(
+            Vector3 startPosition,
+            float speed=3f,
+            float duration=5000f,
+            float offset=0f)
+    {
+        var dir = _target.T.position - startPosition;
+        StartCoroutine(Static(startPosition, dir, duration, speed, _basicBulletColor));
     }
 
 }

@@ -7,7 +7,7 @@ public class Ship : MonoBehaviour
     bool _isPlayer = true;
 
     [SerializeField]
-    Ship _targetShip;
+    ShipCore _core;
 
     [SerializeField]
     float _speed = 100f;
@@ -21,7 +21,7 @@ public class Ship : MonoBehaviour
     Vector3 _left = Vector3.left;
 
     Transform _t = null;
-    Transform t
+    public Transform T
     {
         get
         {
@@ -30,7 +30,14 @@ public class Ship : MonoBehaviour
         }
     }
 
-    void Control()
+    void OnTriggerEnter2D(Collider2D c)
+    {
+        if (!_isPlayer) { return; }
+        if (c.tag != "DamageObject") { return; }
+        ScoreCounter.Count();
+    }
+
+    void Player()
     {
         var up = Input.GetAxisRaw("Vertical") > 0;
         var down = Input.GetAxisRaw("Vertical") < 0;
@@ -42,7 +49,7 @@ public class Ship : MonoBehaviour
             return;
         }
 
-        var p = t.position;
+        var p = T.position;
         var rate = _speed * Time.deltaTime;
 
         if (up) { p = p + _up * rate; }
@@ -61,32 +68,32 @@ public class Ship : MonoBehaviour
         toPosition.x = Mathf.Clamp(toPosition.x, min.x, max.x);
         toPosition.y = Mathf.Clamp(toPosition.y, min.y, max.y);
 
-        t.position = toPosition;
+        T.position = toPosition;
     }
 
-    int _counter = 0;
+    float _time = 6f;
     void Cpu()
     {
-        _counter++;
-        if (_counter > 100)
+        _time += Time.deltaTime;
+
+        if (ScoreCounter.Stopped) { return; }
+
+        if (_time > 7f)
         {
-            if (_counter > 150)
+            var _rand = Random.Range(0, 4);
+            if (_rand == 0 || _rand == 1)
             {
-                _rand = Random.Range(0, 3);
-                _counter = 0;
+                _bulletGenerator.HomingCircle(T.position);
             }
-            else
+            if (_rand == 0 || _rand == 2)
             {
-                return;
+                _bulletGenerator.Winder(T.position);
             }
-        }
-        if (_rand == 0 || _rand == 1)
-        {
-            _bulletGenerator.HomingCircle(t.position, _targetShip.transform.position);
-        }
-        if (_rand == 0 || _rand == 2)
-        {
-            _bulletGenerator.Winder(t.position, _targetShip.transform.position);
+            if (_rand == 0 || _rand == 3)
+            {
+                _bulletGenerator.Basic(T.position);
+            }
+            _time = 0f;
         }
     }
 
@@ -94,11 +101,12 @@ public class Ship : MonoBehaviour
     void Awake()
     {
         _rand = Random.Range(0, 2);
+        _core.Initialize(_isPlayer);
     }
 
     void Update()
     {
-        if (_isPlayer) { Control(); }
+        if (_isPlayer) { Player(); }
         if (!_isPlayer) { Cpu(); }
     }
 
