@@ -662,7 +662,7 @@ PlayerSettings:
   cloudServicesEnabled:
     UNet: 1
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: 2251f231-e5c5-4f14-8bd8-77dda90349c6
   projectName: Unity1Weeks_20180604
   organizationId: junichi-morigaki
